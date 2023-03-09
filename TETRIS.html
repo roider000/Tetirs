@@ -401,7 +401,7 @@
     }
 
 
-    //=========================================이벤트 리스너============================================//
+    //=========================================키보드 이벤트============================================//
     //=================================================================================================//
     function just_mino_erase() {
       const mino = mino_yx();
@@ -880,32 +880,34 @@
     $start_button.addEventListener('mouseup', click_up_effect)
 
 
-
-
-
     //=========================================게임 시작버튼========================================//
-    function keydwon_preventdefault() {
-      window.addEventListener('keydown', (e) => {
-        event.stopPropagation()
-        if (event.code === 'ArrowLeft') {
-          e.preventDefault()
-        } else if (event.code === 'ArrowRight') {
-          e.preventDefault()
-        } else if (event.code === 'ArrowDown') {
-          e.preventDefault()
-        } else if (event.code === 'ArrowUp') {
-          e.preventDefault()
-        } else if (event.code === 'Space') {
-          e.preventDefault()
-        }
-      })
+    function keydown_event_remove() {
+      console.log('2')
+      event.stopPropagation()
+      if (event.code === 'ArrowLeft') {
+        event.preventDefault()
+      } else if (event.code === 'ArrowRight') {
+        event.preventDefault()
+      } else if (event.code === 'ArrowDown') {
+        event.preventDefault()
+      } else if (event.code === 'ArrowUp') {
+        event.preventDefault()
+      } else if (event.code === 'Space') {
+        event.preventDefault()
+      }
     }
-    /*$container.addEventListener('click',(event)=>{
-      $tetris_main.removeEventListener('click', keydwon_preventdefault)
-    })*/
-    //게임외 바깥 요소 클릭하면 다시 방향키의 기본동작(스크롤 조작)하게 만들고 싶은데 방법을 모르겠음//
-    //unbind해봤는데 안됨//
-    $tetris_main.addEventListener('click', keydwon_preventdefault)
+    function keydown_preventdefault() {
+      window.addEventListener('keydown', keydown_event_remove)
+    }
+
+    $container.addEventListener('click', () => { // 게임 바깥쪽 클릭하면 키보드 기본동작 활성화
+      window.removeEventListener('keydown', keydown_event_remove)
+    })
+
+    $tetris_main.addEventListener('click', keydown_preventdefault) // 게임 안쪽 클릭하면 키보드 기본동작 비활성화
+    $tetris_main.addEventListener('click', (e) => {
+      e.stopPropagation()
+    })
 
     function start_game() {
       $lobby.classList.add('blind');
@@ -917,26 +919,6 @@
       countdown();
     }
     $start_button.addEventListener('click', start_game);
-
-
-
-
-
-    /*
-     1. 도형 생성
-     2. 도형을 표현하는 방법
-    
-    
-    */
-
-
-
-
-
-
-
-
-
 
   </script>
 </body>
