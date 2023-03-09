@@ -1,0 +1,241 @@
+#tetris-main{
+    display: grid;
+    background-color: rgb(236, 226, 211);
+    width: 802px;
+    height: 602px;
+    border: solid 1px;
+    grid-template-columns: 72.5px 150px 40px 275px 40px 150px 72.5px;
+    grid-template-rows: 34px 40px 135px 125px 200px 33px 33px;
+    grid-template-areas:
+    ' . . . . . . . '
+    ' . . . game . . . '
+    ' . hold . game . next . '
+    ' . . . game . next . '
+    ' . sll . game . pause . '
+    ' . . . game . . . '
+    ' . . . . . . .';
+    user-select : none;
+}
+/*================================== 테트리스 로비 ===================================*/
+#tetris-lobby{
+    grid-area: game;
+    display: grid;
+    background-color: rgb(216, 202, 179);
+    grid-template-columns: 26px 223px 26px;
+    grid-template-rows: 68px 78px 45px 44px 65px 161px 72px;
+    grid-template-areas:
+    ' . . . '
+    ' . game-title . '
+    ' . . . '
+    ' . game-start . '
+    ' . . . '
+    ' . log-score . '
+    ' . . . '
+
+}
+#game-title{
+    grid-area: game-title;
+    background-color: rgb(236, 226, 211);
+    text-align: center;
+}
+#game-title span{
+    position: relative;
+    top: 19%;
+    font-size: 41px;
+    color: goldenrod;
+    font-weight: 900;
+}
+#start{
+    grid-area: game-start;
+    background-color: rgb(216, 202, 179);
+    text-align: center;  
+}
+#start-button{
+    width: 80%;
+    height: 100%;
+    background-color: rgb(236, 226, 211);
+    border: outset;
+    cursor: pointer;
+}
+#start-button:hover{
+        background-color: rgb(233 209 172);
+}
+#start span{
+    font-size: 19px;
+    color: goldenrod;
+    font-weight: 800;
+}
+#log-score{
+    grid-area: log-score;
+    background-color: rgb(236, 226, 211);
+    flex-direction: column;
+}
+#HIGH-SCORES-title{
+    width: 100%;
+    height: 28.5px;
+    text-align: center;
+    border-bottom: solid 3px oldlace;
+}
+#HIGH-SCORES-title span{
+    font-size: 19px;
+    color: goldenrod;
+    font-weight: 800;
+    position: relative;
+    top: 16%;
+}
+#HIGH-SCORES{
+    display: flex;
+    width: 100%;
+    height: 132.5px;
+    flex-direction: column;
+}
+#HIGH-SCORES li{
+    width: 100%;
+    height: 26.5px;
+    border-bottom: solid 1px oldlace;
+    position: relative;
+}
+#HIGH-SCORES span{
+    position: absolute;
+    right: 4px;
+    top: 4px;
+    font-size: 16px;
+    font-weight: 600;
+    color: darkgrey;
+}
+
+
+/*================================== 클래스 ===================================*/
+.game-text{
+    position: relative;
+    top: 25%;
+    font-weight: bold;
+    color: darkgoldenrod;
+}
+.title{
+    grid-area: title;
+    margin-top: 4px;
+    border-radius: 10px;
+    background-color: rgb(236, 226, 211);
+    margin-bottom: 4px;
+    text-align: center;
+}
+
+/*================================== NEXT ===================================*/
+#NEXT{
+    grid-area: next;
+    display: grid;
+    background-color: rgb(216, 202, 179);
+    grid-template-columns: 12.5px 125px 12.5px;
+    grid-template-rows: 42px 71px 71px 71px 5px;
+    grid-template-areas: 
+    ' . title . '
+    ' . NEXT-ul . '
+    ' . NEXT-ul . '
+    ' . NEXT-ul . '
+    ' . . . ';
+}
+#NEXT ul{
+    grid-area: NEXT-ul;
+    
+}
+#NEXT li{
+    width: 125px;
+    height: 69px;
+    background-color: rgb(236, 226, 211);
+    border-radius: 3px;
+    text-align: center;
+}
+/*================================== HOLD ===================================*/
+#HOLD{
+    grid-area: hold;
+    display: grid;
+    background-color: rgb(216, 202, 179);
+    grid-template-columns: 12.5px 125px 12.5px;
+    grid-template-rows: 42px 71px 22px;
+    grid-template-areas: 
+    ' . title . '
+    ' . HOLD-1 . '
+    ' . . . ';
+}
+#HOLD-1{
+    grid-area: HOLD-1;
+    width: 125px;
+    height: 86px;
+    background-color: rgb(236, 226, 211);
+    border-radius: 3px;
+    text-align: center;
+}
+
+/*================================== SLL ===================================*/
+#SLL{
+    grid-area: sll;
+    display: grid;
+    background-color: rgb(216, 202, 179);
+    grid-template-columns: 12.5px 125px 12.5px;
+    grid-template-rows: 4px repeat(6, 32px) 4px;
+    grid-template-areas: 
+    ' . . . '
+    ' . SCORE-title . '
+    ' . SCORE . '
+    ' . LEVEL-title . '
+    ' . LEVEL . '
+    ' . LINES-title . '
+    ' . LINES . '
+    ' . . . '
+}
+#SCORE-title{
+    grid-area: SCORE-title;
+}
+#SCORE-title span{
+    top: 15%;
+}
+#LEVEL-title{
+    grid-area: LEVEL-title;
+}
+#LEVEL-title span{
+    top: 15%;
+}
+#LINES-title{
+    grid-area: LINES-title;
+}
+#LINES-title span{
+    top: 15%;
+}
+#SCORE{
+    grid-area: SCORE;
+    background-color: rgb(236, 226, 211);
+    border-radius: 3px;
+    text-align: center;
+}
+#LEVEL{
+    grid-area: LEVEL;
+    background-color: rgb(236, 226, 211);
+    border-radius: 3px;
+    text-align: center;
+}
+#LINES{
+    grid-area: LINES;
+    background-color: rgb(236, 226, 211);
+    border-radius: 3px;
+    text-align: center;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

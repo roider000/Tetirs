@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>테트리스</title>
+  <link rel="stylesheet" href="./TETRIS_layout.css">
+  <link rel="stylesheet" href="./TETRIS_GAME.css">
+  <link rel="stylesheet" href="./TETRIS_ingame.css">
+</head>
+
+<body>
+  <div id="container">
+    <header>
+      <div id="header-1"></div>
+      <div id="header-2">
+        <h1 class="blind">사이트 이름</h1>
+      </div>
+      <div id="header-3"></div>
+    </header>
+    <nav>
+      <div id="nav-container">
+        <ul>
+          <li class="nav-list">목록1</li>
+          <li class="nav-list">목록2</li>
+          <li class="nav-list">목록3</li>
+          <li class="nav-list">목록4</li>
+          <li class="nav-list">목록5</li>
+        </ul>
+      </div>
+    </nav>
+    <main>
+      <div id="main-1"></div>
+      <div id="main-2">
+        <h2 id="h2">
+          <span class="blind">테트리스 게임화면</span>
+          <div id="tetris-main">
+            <div id="tetris-lobby">
+              <div id="game-title">
+                <span> TETRIS </span>
+              </div>
+              <div id="start">
+                <button id="start-button"><span>game start</span></button>
+              </div>
+              <div id="log-score">
+                <div id="HIGH-SCORES-title">
+                  <span>HIGH SCORES</span>
+                </div>
+                <ul id="HIGH-SCORES">
+                  <li id="HIGH-SCORES-1">
+                    <span>0,000</span>
+                  </li>
+                  <li id="HIGH-SCORES-2">
+                    <span>0,000</span>
+                  </li>
+                  <li id="HIGH-SCORES-3">
+                    <span>0,000</span>
+                  </li>
+                  <li id="HIGH-SCORES-4">
+                    <span>0,000</span>
+                  </li>
+                  <li id="HIGH-SCORES-5">
+                    <span>0,000</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div id="tetris-ingame" class="blind">
+              <div id="tetris-table-container">
+              </div>
+            </div>
+            <div id="HOLD">
+              <div class="title">
+                <span class="game-text"> HOLD </span>
+              </div>
+              <div id="HOLD-1">
+                <i class="HOLD-itag"><span class="blind">hold이미지</span></i>
+              </div>
+            </div>
+            <div id="NEXT">
+              <div class="title">
+                <span class="game-text"> NEXT </span>
+              </div>
+              <ul>
+                <li id="NEXT-1">
+                  <i class="NEXT-style"><span class="blind">next이미지1</span></i>
+                </li>
+                <li id="NEXT-2">
+                  <i class="NEXT-style"><span class="blind">next이미지2</span></i>
+                </li>
+                <li id="NEXT-3">
+                  <i class="NEXT-style"><span class="blind">next이미지3</span></i>
+                </li>
+              </ul>
+            </div>
+            <div id="SLL">
+              <div class="title" id="SCORE-title"><span class="game-text"> SCORE </span></div>
+              <div id="SCORE">
+                <span id="SCORE_text" class="SLL-text"></span>
+              </div>
+              <div class="title" id="LEVEL-title"><span class="game-text"> LEVEL </span></div>
+              <div id="LEVEL">
+                <span id="LEVEL_text" class="SLL-text"></span>
+              </div>
+              <div class="title" id="LINES-title"><span class="game-text"> LINES </span></div>
+              <div id="LINES">
+                <span id="LINES_text" class="SLL-text"></span>
+              </div>
+            </div>
+            <div id="pause-sector">
+              <button id="pause" class="blind">
+                <span class="blind">검색</span>
+                <span id="pause-icon"></span>
+              </button>
+              <div id="game-over" class="blind">
+                <span id="gmae-over-title">GAME OVER</span><br>
+                <span id="game-over-score_1">SCORE :</span>
+                <span id="game-over-score_2"></span><br>
+                <button id="go_menu_1"></button>
+                <button id="restart"></button>
+              </div>
+              <div id="pause-pop" class="blind">
+                <span id="pause-pop-text">PAUSED</span><br>
+                <button id="go_menu_2"></button>
+                <button id="resume"></button>
+              </div>
+            </div>
+          </div>
+        </h2>
+      </div>
+      <div id="main-3"></div>
+    </main>
+    <footer>
+      <div id="footer-container"></div>
+    </footer>
+  </div>
+  <script>
+    const $tetris_main = document.getElementById("tetris-main");
+    const $container = document.getElementById("container");
+    const $table_container = document.getElementById("tetris-table-container");
+    const $lobby = document.getElementById("tetris-lobby");
+    const $ingame = document.getElementById("tetris-ingame");
+    const $start_button = document.getElementById("start-button");
+    const mino_list = ['I', 'O', 'Z', 'S', 'J', 'L', 'T'];
+    const $score = document.getElementById("SCORE_text");
+    const $level = document.getElementById("LEVEL_text");
+    const $lines = document.getElementById("LINES_text");
+    const $game_over = document.getElementById("game-over");
+    const $game_over_score = document.getElementById("game-over-score_2");
+    const $game_over_go_menu_1 = document.getElementById("go_menu_1");
+    const $game_restart = document.getElementById("restart");
+    const $pause_button = document.getElementById("pause");
+    const $pause_go_menu_2 = document.getElementById("go_menu_2");
+    const $pause_resume = document.getElementById("resume");
+    const $pause_pop = document.getElementById("pause-pop");
+    const top_score = [];
+    const $pause_icon = document.getElementById("pause-icon");
+    const predict_xy = [];
+
+    let mino_down_Interval;
+    let mino_next;
+    let mino_hold;
+    let mino_now;
+    let y;
+    let x;
+    let sec = 800;
+    let done = false;
+    let ArrowDown_flag = true;
+    let space_flag = true;
+    let spin = 0;
+    let mino_next_copy;
+    let hold = '';
+    let hold_count = 0;
+    let sll_score = 0;
+    let sll_level = 1;
+    let sll_lines = 0;
+    let game_over_flag = false;
+    let count_interval;
+    let $span;
+    let start_game_flag = false;
+    let copy_y;
+    let callback_flag;
+    let mino_past;
+
+
+
+    //=========================================테이블 만들기========================================//
+    let table_data;
+    let $fragment;
+    let $table;
+    function drawTable() {
+      table_data = Array(20).fill().map(() => Array(10).fill());
+      $fragment = document.createDocumentFragment();
+      $table = document.createElement('table');
+      table_data.forEach((row, i) => {
+        const $tr = document.createElement('tr');
+        row.forEach((cell, j) => {
+          const $td = document.createElement('td');
+          $tr.append($td);
+          table_data[i][j] = $td
+        })
+        $fragment.append($tr);
+      })
+      $table.append($fragment);
+      $table_container.append($table);
+    }
+    //=========================================next 미노 화면 적용========================================//
+    function next_mino_img() {
+      mino_next.forEach((e, i) => {
+        document.querySelectorAll("#NEXT i")[i].classList.add(`NEXT-${e}`)
+      })
+    }
+    //=========================================next 미노 화면 해제========================================//
+    function next_mino_img_del() {
+      mino_next_copy.forEach((e, i) => {
+        document.querySelectorAll("#NEXT i")[i].classList.remove(`NEXT-${e}`)
+      })
+    }
+
+    //=========================================미노 셔플 및 뽑기========================================//
+    function create_shuffled() {
+      const mino_list_copy = mino_list.concat();
+      let shuffled = [];
+      while (mino_list_copy.length > 0) {
+        const random = Math.floor(Math.random() * mino_list_copy.length);
+        shuffled = shuffled.concat(mino_list_copy.splice(random, 1));
+      }
+      return shuffled;
+    }
+    function create_mino_4() {
+      shuffled = create_shuffled();
+      mino_now = shuffled[0];
+      mino_next = shuffled.slice(1, 4);
+      mino_next_copy = JSON.parse(JSON.stringify(mino_next))
+      console.log(mino_now);
+      console.log(mino_next);
+    }
+    //=========================================미노 도형 좌표========================================//
+    function mino_yx() {
+      const mino = {
+        'I': [[[y + 1, x], [y + 1, x - 1], [y + 1, x + 1], [y + 1, x + 2]],
+        [[y + 2, x + 1], [y + 1, x + 1], [y, x + 1], [y + 3, x + 1]],
+        [[y + 2, x], [y + 2, x - 1], [y + 2, x + 1], [y + 2, x + 2]],
+        [[y, x], [y + 1, x], [y + 2, x], [y + 3, x]]],
+        'L': [[[y + 1, x], [y + 1, x - 1], [y, x - 1], [y + 1, x + 1]],
+        [[y + 1, x], [y, x], [y, x + 1], [y + 2, x]],
+        [[y + 1, x], [y + 1, x + 1], [y + 2, x + 1], [y + 1, x - 1]],
+        [[y + 1, x], [y, x], [y + 2, x - 1], [y + 2, x]]],
+        'J': [[[y + 1, x], [y + 1, x - 1], [y + 1, x + 1], [y, x + 1]],
+        [[y + 1, x], [y, x], [y + 2, x], [y + 2, x + 1]],
+        [[y + 1, x], [y + 1, x + 1], [y + 1, x - 1], [y + 2, x - 1]],
+        [[y + 1, x], [y + 2, x], [y, x], [y, x - 1]]],
+        'O': [[[y + 1, x], [y, x], [y, x + 1], [y + 1, x + 1]],
+        [[y + 1, x], [y, x], [y, x + 1], [y + 1, x + 1]],
+        [[y + 1, x], [y, x], [y, x + 1], [y + 1, x + 1]],
+        [[y + 1, x], [y, x], [y, x + 1], [y + 1, x + 1]]],
+        'S': [[[y + 1, x], [y + 1, x - 1], [y, x], [y, x + 1]],
+        [[y + 1, x], [y + 1, x + 1], [y, x], [y + 2, x + 1]],
+        [[y + 1, x], [y + 1, x + 1], [y + 2, x], [y + 2, x - 1]],
+        [[y + 1, x], [y + 1, x - 1], [y + 2, x], [y, x - 1]]],
+        'T': [[[y + 1, x], [y + 1, x - 1], [y + 1, x + 1], [y, x]],
+        [[y + 1, x], [y + 2, x], [y + 1, x + 1], [y, x]],
+        [[y + 1, x], [y + 2, x], [y + 1, x + 1], [y + 1, x - 1]],
+        [[y + 1, x], [y + 2, x], [y, x], [y + 1, x - 1]]],
+        'Z': [[[y + 1, x + 1], [y, x - 1], [y, x], [y + 1, x]],
+        [[y + 1, x + 1], [y, x + 1], [y + 2, x], [y + 1, x]],
+        [[y + 2, x + 1], [y + 1, x - 1], [y + 1, x], [y + 2, x]],
+        [[y + 1, x], [y, x], [y + 2, x - 1], [y + 1, x - 1]]]
+      }
+      return mino;
+    }
+    //===================================score, level, lines 업데이트========================//
+    function comma_format(int) {
+      return int.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+    function sll_update() {
+      if (sll_score >= sll_level * 1000) {
+        sll_level += 1;
+        sec -= 100;
+        clearInterval(mino_down_Interval);
+      }
+      $score.textContent = comma_format(sll_score);
+      $level.textContent = comma_format(sll_level);
+      $lines.textContent = comma_format(sll_lines);
+    }
+    //=========================================NEXT 받고 새로운 미노 들어옴====================================//
+    function receive_mino() {
+      if (!game_over_flag) {
+        mino_next_copy = JSON.parse(JSON.stringify(mino_next))
+        mino_now = mino_next.shift()
+        mino_push = create_shuffled()
+        mino_next.push(mino_push[0])
+        next_mino_img_del()
+        next_mino_img()
+      }
+    }
+    //=========================================줄 제거 함수====================================//
+    function clear_line() {
+      const full_line = [];
+      table_data.forEach((row, i) => {
+        let cell_count = 0;
+        row.forEach((cell, j) => {
+          if (table_data[i][j].classList.contains('done')) {
+            cell_count += 1;
+          }
+        })
+        if (cell_count === 10) {
+          full_line.push(i)
+        }
+      })
+      if (full_line.length > 0) {
+        full_line.forEach((row_index) => {
+          table_data[row_index].forEach((cell, cell_index) => {
+            cell.classList.remove(cell.classList[0])
+            cell.classList.remove(cell.classList[0])
+          })
+        })
+        for (let i = 0; i < full_line.length; i++) {
+          const row = [];
+          let blank_row_index = full_line.sort((a, b) => a - b)[i]
+          document.getElementsByTagName('table')[0].children[`${blank_row_index}`].remove()
+          table_data.splice(blank_row_index, 1)
+          const $tr = document.createElement('tr');
+          for (let j = 0; j < 10; j++) {
+            const $td = document.createElement('td')
+            $tr.append($td)
+            row.push($td)
+          }
+          $table.prepend($tr)
+          table_data.unshift(row)
+        }
+        sll_score += (full_line.length - 1) * 200 + 100;
+        sll_lines += full_line.length;
+        sll_update()
+      }
+    }
+    //=========================================떨어질 자리 ===========================================//
+    function mino_drop_predict() {
+      copy_y = y;
+      y = 19;
+      callback_flag = true;
+      mino_drop_predict_callback();
+    }
+
+    function mino_drop_predict_callback() {
+      let mino = mino_yx()
+      let row_index
+      let cell_index
+      for (let i = 0; i < 4; i++) {
+        row_index = mino[mino_now][spin][i][0];
+        cell_index = mino[mino_now][spin][i][1];
+        if ((row_index > 19) || table_data[row_index]?.[cell_index]?.classList.contains('done')) {
+          y -= 1;
+          mino_drop_predict_callback();
+          if (!callback_flag) { return; }
+          // 재귀함수로 이동하면 이동한 재귀 함수에서 return으로 끝난 다음 다시 호출했던 재귀함수로 돌아와 마저 실행한다. 
+          // for 반복문의 경우 중간에 재귀 함수로 이동하게 되면 재귀함수고 끝나고 다시 돌아왔을 때 for반복문 + 이하 코드를 마저 실행하게 됨
+          // 따라서 if/return으로 막아야 함
+        }
+        let copy_copy_y = y;
+        let list = [];
+        y = copy_y;
+        let mino2 = mino_yx();
+        for (let j = 0; j < 4; j++) {
+          let row_index2 = mino2[mino_now][spin][j][0];
+          list.push(row_index2)
+        }
+        y = copy_copy_y;
+        table_data.forEach((row, i) => {
+          row.forEach((cell, j) => {
+            if ((list[0] < i) && (list[1] < i) && (list[2] < i) && (list[3] < i) && (i < row_index) && (j === cell_index) && (table_data[i][j].classList.contains('done'))) {
+              y -= 1;
+              mino_drop_predict_callback();
+              if (!callback_flag) { return; }
+            }
+          })
+        })
+      }
+      if (!callback_flag) { return; }
+      for (let i = 0; i < 4; i++) {
+        row_index = mino[mino_now][spin][i][0];
+        cell_index = mino[mino_now][spin][i][1];
+        table_data[row_index]?.[cell_index]?.classList.add(`mino_predict_${mino_now}`)
+        mino_past = mino_now;
+        const list = [];
+        list.push(row_index);
+        list.push(cell_index);
+        predict_xy.push(list);
+      }
+      callback_flag = false;
+      return;
+    }
+
+    function mino_drop_predict_erase() {
+      for (let i = 0; i < 4; i++) {
+        table_data[predict_xy[i]?.[0]]?.[predict_xy[i]?.[1]]?.classList.remove(`mino_predict_${mino_past}`)
+      }
+      predict_xy.splice(0, predict_xy.length)
+    }
+
+
+    //=========================================이벤트 리스너============================================//
+    //=================================================================================================//
+    function just_mino_erase() {
+      const mino = mino_yx();
+      for (let i = 0; i < 4; i++) {
+        let row_index = mino[mino_now][spin]?.[i]?.[0];
+        let cell_index = mino[mino_now][spin]?.[i]?.[1];
+        table_data[row_index][cell_index].classList.remove(mino_now)
+      }
+    }
+    function keydown_event() {
+      if ((event.code === 'ArrowLeft') && space_flag) {
+        for (let j = 0; j < 4; j++) {
+          const mino = mino_yx();
+          let row_index = mino[mino_now][spin][j]?.[0];
+          let cell_index = mino[mino_now][spin][j]?.[1];
+          let other_mino = table_data?.[row_index]?.[cell_index - 1]?.classList?.contains?.('done')
+          if (!(0 < cell_index) || other_mino) {
+            return;
+          }
+        }
+        just_mino_erase();
+        x -= 1;
+        mino_create();
+      } else if ((event.code === 'ArrowRight') && space_flag) {
+        for (let j = 0; j < 4; j++) {
+          const mino = mino_yx();
+          let row_index = mino[mino_now][spin][j]?.[0];
+          let cell_index = mino[mino_now][spin][j]?.[1];
+          let other_mino = table_data?.[row_index]?.[cell_index + 1]?.classList?.contains?.('done')
+          if (!(cell_index < 9) || other_mino) {
+            return;
+          }
+        }
+        just_mino_erase();
+        x += 1;
+        mino_create();
+      } else if ((event.code === 'ArrowDown') && space_flag) {
+        if (ArrowDown_flag) {
+          ArrowDown_flag = false;
+          done = mino_erase()
+          y += 1;
+          if (done) {
+            spin = 0;
+            clear_line()
+            hold_count = 0;
+            y = 0;
+            x = 4;
+            mino_create();
+            mino_down();
+            ArrowDown_flag = true;
+            done = false;
+            return;
+          }
+          mino_create();
+          sll_score += 1;
+          sll_update();
+          ArrowDown_flag = true;
+        }
+      } else if (event.code === 'Space') {
+        if (space_flag) {
+          space_flag = false;
+          space_Interval_ID = setInterval(() => {
+            done = mino_erase();
+            y += 1;
+            if (done) {
+              clearInterval(space_Interval_ID)
+              spin = 0;
+              clear_line();
+              hold_count = 0;
+              y = 0;
+              x = 4;
+              mino_create();
+              mino_down();
+              done = false;
+              space_flag = true;
+              return;
+            }
+            sll_score += 1;
+            sll_update();
+            mino_create();
+          }, 0)
+        }
+      } else if ((event.code === 'ArrowUp') && space_flag) {
+        let spin_copy = spin;
+        spin_copy += 1;
+        if (spin_copy > 3) {
+          spin_copy = 0;
+        }
+        const mino = mino_yx();
+        function overlap_mino_move() {
+          spin += 1;
+          if (spin > 3) {
+            spin = 0;
+          }
+          mino_create();
+        }
+        let check_flag = false;
+        for (let i = 0; i < 4; i++) {
+          let row_index = mino[mino_now]?.[spin_copy]?.[i]?.[0];
+          let cell_index = mino[mino_now]?.[spin_copy]?.[i]?.[1];
+          let other_mino = table_data?.[row_index]?.[cell_index]?.classList?.contains?.('done')
+          if ((row_index > 19) || (row_index < 0) || (cell_index < 0) || (cell_index > 9) || (other_mino)) {
+            check_flag = true;
+          }
+        }
+        let overlap_solution = false;
+        if (check_flag) {
+          overlap_solution = {
+            'x+1': 0,
+            'x-1': 0,
+            'y+1': 0,
+            'y-1': 0,
+            'x+2': 0,
+            'x-2': 0,
+            'y+2': 0,
+            'y+2': 0,
+          };
+          for (let i = 0; i < 4; i++) {
+            let row_index = mino[mino_now]?.[spin_copy]?.[i]?.[0];
+            let cell_index = mino[mino_now]?.[spin_copy]?.[i]?.[1];
+            let other_mino = table_data?.[row_index]?.[cell_index]?.classList?.contains?.('done')
+            if ((mino_now === 'I') && ((row_index + 1) < 20) && ((row_index + 1) > -1) && ((cell_index) < 10) && ((cell_index) > -1) && !(table_data?.[row_index + 1]?.[cell_index]?.classList?.contains?.('done'))) {
+              overlap_solution['y+1'] += 1;
+            }
+            if ((mino_now === 'I') && ((row_index + 2) < 20) && ((row_index + 1) > -1) && ((cell_index) < 10) && ((cell_index) > -1) && !(table_data?.[row_index + 2]?.[cell_index]?.classList?.contains?.('done'))) {
+              overlap_solution['y+2'] += 1;
+            }
+            if ((mino_now === 'I') && ((row_index - 1) > -1) && ((row_index - 1) < 20) && ((cell_index) < 10) && ((cell_index) > -1) && !(table_data?.[row_index - 1]?.[cell_index]?.classList?.contains?.('done'))) {
+              overlap_solution['y-1'] += 1;
+            }
+            if ((mino_now === 'I') && ((row_index - 2) > -1) && ((row_index - 2) < 20) && ((cell_index) < 10) && ((cell_index) > -1) && !(table_data?.[row_index - 2]?.[cell_index]?.classList?.contains?.('done'))) {
+              overlap_solution['y-2'] += 1;
+            }
+            if ((mino_now === 'I') && ((cell_index + 1) < 10) && ((cell_index + 1) > -1) && ((row_index) < 20) && ((row_index) > -1) && !(table_data?.[row_index]?.[cell_index + 1]?.classList?.contains?.('done'))) {
+              overlap_solution['x+1'] += 1;
+            }
+            if ((mino_now === 'I') && ((cell_index + 2) < 10) && ((cell_index + 2) > -1) && ((row_index) < 20) && ((row_index) > -1) && !(table_data?.[row_index]?.[cell_index + 2]?.classList?.contains?.('done'))) {
+              overlap_solution['x+2'] += 1;
+            }
+            if ((mino_now === 'I') && ((cell_index - 1) > -1) && ((cell_index - 1) < 10) && ((row_index) < 20) && ((row_index) > -1) && !(table_data?.[row_index]?.[cell_index - 1]?.classList?.contains?.('done'))) {
+              overlap_solution['x-1'] += 1;
+            }
+            if ((mino_now === 'I') && ((cell_index - 2) > -1) && ((cell_index - 2) < 10) && ((row_index) < 20) && ((row_index) > -1) && !(table_data?.[row_index]?.[cell_index - 2]?.classList?.contains?.('done'))) {
+              overlap_solution['x-2'] += 1;
+            }
+            if (!(mino_now === 'I') && (row_index + 1) < 20 && ((row_index + 1) > -1) && (cell_index < 10) && (cell_index > -1) && !(table_data?.[row_index + 1]?.[cell_index]?.classList?.contains?.('done'))) {
+              overlap_solution['y+1'] += 1;
+            }
+            if (!(mino_now === 'I') && ((row_index - 1) > -1) && ((row_index - 1) < 20) && (cell_index < 10) && (cell_index > -1) && !(table_data?.[row_index - 1]?.[cell_index]?.classList?.contains?.('done'))) {
+              overlap_solution['y-1'] += 1;
+            }
+            if (!(mino_now === 'I') && ((cell_index + 1) < 10) && ((cell_index + 1) > -1) && (row_index > -1) && (row_index < 20) && !(table_data?.[row_index]?.[cell_index + 1]?.classList?.contains?.('done'))) {
+              overlap_solution['x+1'] += 1;
+            }
+            if (!(mino_now === 'I') && ((cell_index - 1) > -1) && ((cell_index - 1) < 10) && (row_index > -1) && (row_index < 20) && !(table_data?.[row_index]?.[cell_index - 1]?.classList?.contains?.('done'))) {
+              overlap_solution['x-1'] += 1;
+            }
+          }
+        }
+        if (overlap_solution) {
+          if (overlap_solution['x+1'] === 4) {
+            just_mino_erase()
+            x += 1;
+            overlap_mino_move()
+            return;
+          } else if (overlap_solution['x+2'] === 4) {
+            just_mino_erase()
+            x += 2;
+            overlap_mino_move()
+            return;
+          } else if (overlap_solution['x-1'] === 4) {
+            just_mino_erase()
+            x -= 1;
+            overlap_mino_move()
+            return;
+          } else if (overlap_solution['x-2'] === 4) {
+            just_mino_erase()
+            x -= 2;
+            overlap_mino_move()
+            return;
+          } else if (overlap_solution['y+1'] === 4) {
+            just_mino_erase()
+            y += 1;
+            overlap_mino_move()
+            return;
+          } else if (overlap_solution['y+2'] === 4) {
+            just_mino_erase()
+            y += 2;
+            overlap_mino_move()
+            return;
+          } else if (overlap_solution['y-1'] === 4) {
+            just_mino_erase()
+            y -= 1;
+            overlap_mino_move()
+            return;
+          } else if (overlap_solution['y-2'] === 4) {
+            just_mino_erase()
+            y -= 2;
+            overlap_mino_move()
+            return;
+          } else {
+            return;
+          }
+        }
+        just_mino_erase()
+        overlap_mino_move()
+      } else if (event.code === 'KeyC') {
+        if (hold_count === 0) {
+          hold_count += 1;
+          if (hold) {
+            let mino_now_copy = mino_now;
+            just_mino_erase()
+            mino_now = hold;
+            document.querySelectorAll("#HOLD-1 i")[0].classList.remove(`HOLD-${hold}`)
+            hold = mino_now_copy;
+            document.querySelectorAll("#HOLD-1 i")[0].classList.add(`HOLD-${hold}`)
+            y = 0;
+            x = 4;
+            mino_create();
+            mino_down()
+            return;
+          }
+          just_mino_erase()
+          hold = mino_now;
+          document.querySelectorAll("#HOLD-1 i")[0].classList.add(`HOLD-${hold}`)
+          receive_mino()
+          y = 0;
+          x = 4;
+          mino_create();
+          mino_down()
+        }
+      }
+    };
+
+    //=========================================미노 화면에 생성하기========================================//
+    function mino_create() {
+      if (game_over_flag) {
+        return;
+      }
+      let game_over = false;
+      const mino = mino_yx();
+      for (let i = 0; i < 4; i++) {
+        let row_index = mino[mino_now][spin][i][0];
+        let cell_index = mino[mino_now][spin][i][1];
+        if (table_data[row_index][cell_index].classList.contains('done')) {
+          game_over = true;
+          gmae_over_flag = true;
+        }
+        table_data[row_index][cell_index].classList.add(mino_now)
+      }
+      mino_drop_predict_erase();
+      mino_drop_predict();
+      y = copy_y;
+      if (game_over) {
+        game_over_flag = true;
+        clearInterval(mino_down_Interval)
+        $game_over.classList.remove('blind')
+        pause_eventlistener_remove()
+        window.removeEventListener('keydown', keydown_event)
+        $game_over_score.textContent = comma_format(sll_score);
+
+        top_score.push(sll_score)
+        top_score.sort((a, b) => b - a)
+        document.getElementById('HIGH-SCORES-1').children[0].classList.add('score_first')
+        top_score.forEach((e, i) => {
+          if (i > 4) { return; }
+          document.getElementById('HIGH-SCORES').children[i].children[0].textContent = comma_format(e);
+          document.getElementById('HIGH-SCORES').children[i].children[0].style.color = '#ad7171';
+        })
+        return;
+      }
+      next_mino_img()
+    }
+
+
+    //=========================================미노 화면에 지우기========================================//
+    function mino_erase() {
+      const mino = mino_yx();
+      for (let i = 0; i < 4; i++) { // 땅이나 다른 블록에 가로막히는게 없는지 확인되면 밑으로 보내줌
+        let row_index = mino[mino_now][spin]?.[i]?.[0];
+        let cell_index = mino[mino_now][spin]?.[i]?.[1];
+        let under_other_mino = table_data[row_index + 1]?.[cell_index]?.classList?.contains('done');
+        if (row_index === 19 || under_other_mino) {
+          clearInterval(mino_down_Interval);
+          for (let j = 0; j < 4; j++) {
+            let row_index = mino[mino_now][spin]?.[j]?.[0];
+            let cell_index = mino[mino_now][spin]?.[j]?.[1];
+            if (table_data[row_index][cell_index].classList.contains('done')) {
+              continue;
+            }
+            table_data[row_index][cell_index].classList.add('done')
+          }
+          receive_mino()
+          return true;
+        }
+      }
+      for (let i = 0; i < 4; i++) {
+        let row_index = mino[mino_now][spin]?.[i]?.[0];
+        let cell_index = mino[mino_now][spin]?.[i]?.[1];
+        table_data[row_index][cell_index].classList.remove(mino_now)
+      }
+    }
+    //=========================================미노 일정하게 하락====================================//
+    function mino_down() {
+      if (mino_down_Interval) {
+        clearInterval(mino_down_Interval)
+      }
+      mino_down_Interval = setInterval(() => {
+        done = mino_erase()
+        y += 1;
+        if (done) {
+          done = false;
+          clear_line()
+          hold_count = 0;
+          y = 0;
+          x = 4;
+          spin = 0;
+          mino_create();
+          mino_down()
+        }
+        mino_create()
+      }, sec)
+    }
+
+    //=========================================시작 카운트 및 시작========================================//
+    function countdown() {
+      $span = document.createElement('span');
+      let count = 3;
+      $span.textContent = count;
+      $span.id = 'count_number'
+      $table_container.append($span)
+      count_interval = setInterval(() => {
+        count -= 1
+        if (count === 0) {
+          clearInterval(count_interval)
+          game_over_flag = false;
+          sll_update();
+          $table_container.removeChild($span)
+          spin = 0;
+          y = 0;
+          x = 4;
+          mino_create();
+          window.addEventListener('keydown', keydown_event)
+          mino_down();
+          start_game_flag = true;
+        }
+        $span.textContent = count
+      }, 1000)
+    }
+    //=========================================게임 오버창========================================//
+    function reset_data() {
+      document.querySelectorAll("#HOLD-1 i")[0].classList.remove(`HOLD-${hold}`)
+      sec = 800
+      done = false;
+      ArrowDown_flag = true;
+      space_flag = true;
+      start_game_flag = false;
+      spin = 0;
+      hold = '';
+      hold_count = 0;
+      sll_score = 0;
+      sll_level = 0;
+      sll_lines = 0;
+      $score.textContent = '';
+      $level.textContent = '';
+      $lines.textContent = '';
+      mino_next.forEach((e, i) => {
+        document.querySelectorAll("#NEXT i")[i].classList.remove(`NEXT-${e}`)
+      })
+      $lobby.classList.remove('blind')
+      $table_container.textContent = ''
+      $ingame.classList.add('blind')
+      $pause_button.classList.add('blind')
+    }
+    $game_over_go_menu_1.addEventListener('click', () => {
+      reset_data();
+      $game_over.classList.add('blind')
+    })
+
+    $game_restart.addEventListener('click', () => {
+      reset_data();
+      $game_over.classList.add('blind')
+      start_game();
+    })
+    //================================ 일시정지 이벤트 리스너 추가/삭제 ===========================//
+    function pause_eventlistener_add() {
+      $pause_button.addEventListener('mousedown', click_down_effect)
+      $pause_button.addEventListener('mouseleave', click_up_effect)
+      $pause_button.addEventListener('mouseup', click_up_effect)
+      $pause_button.style.pointerEvents = 'auto';
+    }
+    function pause_eventlistener_remove() {
+      $pause_button.removeEventListener('mousedown', click_down_effect)
+      $pause_button.removeEventListener('mouseleave', click_up_effect)
+      $pause_button.removeEventListener('mouseup', click_up_effect)
+      $pause_button.style.pointerEvents = 'none';
+    }
+    //=========================================일시정지========================================//
+    $pause_button.addEventListener('click', () => {
+      if (($ingame.classList.length === 0) && !($game_over.classList.length === 0)) {
+        $pause_pop.classList.remove('blind')
+        clearInterval(mino_down_Interval);
+        clearInterval(count_interval);
+        window.removeEventListener('keydown', keydown_event)
+        pause_eventlistener_remove()
+      }
+    })
+
+    $pause_go_menu_2.addEventListener('click', () => {
+      reset_data();
+      $pause_pop.classList.add('blind')
+      pause_eventlistener_add()
+    })
+    $pause_resume.addEventListener('click', () => {
+      $pause_pop.classList.add('blind')
+      if (start_game_flag === false) {
+        $table_container.removeChild($span);
+        countdown();
+        pause_eventlistener_add()
+        return;
+      }
+      pause_eventlistener_add()
+      if ($table_container.querySelector('span')) {
+        $table_container.removeChild($span);
+      }
+      $span = document.createElement('span');
+      let count = 3;
+      $span.textContent = count;
+      $span.id = 'count_number'
+      $table_container.append($span)
+      count_interval = setInterval(() => {
+        count -= 1
+        if (count === 0) {
+          clearInterval(count_interval)
+          $table_container.removeChild($span)
+          window.addEventListener('keydown', keydown_event)
+          start_game_flag = true;
+          mino_down();
+        }
+        $span.textContent = count
+      }, 1000)
+    })
+    //=========================================버튼 누름 효과========================================//
+    // 눌렀을 때
+    function click_down_effect() {
+      event.currentTarget.classList.add('button_down')
+      if (event.currentTarget === $pause_button) {
+        $pause_icon.classList.add('button_down_pause_icon')
+      }
+    }
+    $pause_button.addEventListener('mousedown', click_down_effect)
+    $pause_go_menu_2.addEventListener('mousedown', click_down_effect)
+    $pause_resume.addEventListener('mousedown', click_down_effect)
+    $game_over_go_menu_1.addEventListener('mousedown', click_down_effect)
+    $game_restart.addEventListener('mousedown', click_down_effect)
+    $start_button.addEventListener('mousedown', click_down_effect)
+    // 뗐을 때 || 벗어났을 떄
+    function click_up_effect() {
+      event.currentTarget.classList.remove('button_down')
+      if (event.currentTarget === $pause_button) {
+        $pause_icon.classList.remove('button_down_pause_icon')
+      }
+    }
+    $pause_button.addEventListener('mouseleave', click_up_effect)
+    $pause_go_menu_2.addEventListener('mouseleave', click_up_effect)
+    $pause_resume.addEventListener('mouseleave', click_up_effect)
+    $game_over_go_menu_1.addEventListener('mouseleave', click_up_effect)
+    $game_restart.addEventListener('mouseleave', click_up_effect)
+    $start_button.addEventListener('mouseleave', click_up_effect)
+
+    $pause_button.addEventListener('mouseup', click_up_effect)
+    $pause_go_menu_2.addEventListener('mouseup', click_up_effect)
+    $pause_resume.addEventListener('mouseup', click_up_effect)
+    $game_over_go_menu_1.addEventListener('mouseup', click_up_effect)
+    $game_restart.addEventListener('mouseup', click_up_effect)
+    $start_button.addEventListener('mouseup', click_up_effect)
+
+
+
+
+
+    //=========================================게임 시작버튼========================================//
+    function keydwon_preventdefault() {
+      window.addEventListener('keydown', (e) => {
+        event.stopPropagation()
+        if (event.code === 'ArrowLeft') {
+          e.preventDefault()
+        } else if (event.code === 'ArrowRight') {
+          e.preventDefault()
+        } else if (event.code === 'ArrowDown') {
+          e.preventDefault()
+        } else if (event.code === 'ArrowUp') {
+          e.preventDefault()
+        } else if (event.code === 'Space') {
+          e.preventDefault()
+        }
+      })
+    }
+    /*$container.addEventListener('click',(event)=>{
+      $tetris_main.removeEventListener('click', keydwon_preventdefault)
+    })*/
+    //게임외 바깥 요소 클릭하면 다시 방향키의 기본동작(스크롤 조작)하게 만들고 싶은데 방법을 모르겠음//
+    //unbind해봤는데 안됨//
+    $tetris_main.addEventListener('click', keydwon_preventdefault)
+
+    function start_game() {
+      $lobby.classList.add('blind');
+      $ingame.classList.remove('blind');
+      $pause_button.classList.remove('blind')
+      pause_eventlistener_add()
+      drawTable();
+      create_mino_4();
+      countdown();
+    }
+    $start_button.addEventListener('click', start_game);
+
+
+
+
+
+    /*
+     1. 도형 생성
+     2. 도형을 표현하는 방법
+    
+    
+    */
+
+
+
+
+
+
+
+
+
+
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,136 @@
+@import "reset.css";
+
+* {
+  box-sizing: border-box;
+}
+
+.blind {
+  position: absolute !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  margin: -1px !important;
+  width: 1px !important;
+  height: 1px !important;
+}
+
+#container {
+  display: grid;
+  margin: 10px 0;
+  padding: 0 10px;
+  grid-template-columns: minmax(200px, 17fr) minmax(900px, 76.5fr) minmax(200px, 17fr);
+  grid-template-rows: 25px 155px 60px auto 30px 50px;
+  grid-template-areas:
+    ' . . .'
+    'header header header'
+    'nav nav nav '
+    'main main main'
+    ' . . . '
+    'footer footer footer';
+}
+
+/*=====================================시맨틱 태그=====================================*/
+header {
+  grid-area: header;
+  display: flex;
+  background-color: rgb(228, 211, 185);
+  border: solid 1px;
+  margin-bottom: 2px;
+}
+
+nav {
+  grid-area: nav;
+  display: flex;
+  background-color: rgb(228, 211, 185);
+  border: solid 1px;
+  margin-bottom: 2px;
+}
+
+main {
+  grid-area: main;
+  display: flex;
+  background-color: rgb(228, 211, 185);
+  border: solid 1px;
+  margin-bottom: 2px;
+  justify-content: center;
+}
+
+footer {
+  grid-area: footer;
+  display: flex;
+  background-color: rgb(228, 211, 185);
+  border: solid 1px;
+  margin-bottom: 2px;
+}
+
+/*=====================================header 파트=====================================*/
+#header-1 {
+  background-color: #f5f4f0;
+  width: 100%;
+  margin: 5px;
+}
+
+#header-2 {
+  background-color: #f5f4f0;
+  width: 200%;
+  margin: 5px;
+}
+
+#header-3 {
+  background-color: #f5f4f0;
+  width: 100%;
+  margin: 5px;
+}
+
+/*=====================================nav 파트=====================================*/
+#nav-container {
+  background-color: #f5f4f0;
+  width: 100%;
+  margin: 5px;
+}
+
+#nav-container ul {
+  display: flex;
+  justify-content: space-evenly;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.nav-list {
+  background-color: rgb(211, 197, 177);
+  border: outset 3px;
+  width: 135px;
+  height: 36px;
+  text-align: center;
+  line-height: 31px;
+}
+
+/*=====================================main 파트=====================================*/
+#main-1 {
+  background-color: #f5f4f0;
+  width: 200px;
+  margin: 5px;
+}
+
+#main-2 {
+  display: flex;
+  background-color: #f5f4f0;
+  width: 900px;
+  height: 700px;
+  margin: 5px;
+  justify-content: center;
+  align-items: center;
+}
+
+#main-3 {
+  background-color: #f5f4f0;
+  width: 200px;
+  margin: 5px;
+}
+
+/*=====================================footer 파트=====================================*/
+#footer-container {
+  background-color: #f5f4f0;
+  width: 100%;
+  margin: 5px;
+}
